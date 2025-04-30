@@ -26,28 +26,29 @@ public class AnimatedBackground : IDeserializable, ISerializable, IDrawable
 
     public uint Loops { get; set; } // 0 means infinite
 
+    public string? SoundString { get; set; }
+    public uint? SoundFrame { get; set; }
+
     public void Deserialize(XElement e)
     {
-        Midground = e.GetBoolAttribute("Midground", false);
-
         Gfx = e.DeserializeRequiredChildOfType<Gfx>();
+
+        Midground = e.GetBoolAttribute("Midground", false);
+        ForceDraw = e.GetBoolElement("ForceDraw", false);
+
+        FrameOffset = e.GetIntElement("FrameOffset", 0);
+        Loops = e.GetUIntElement("Loops", 0);
 
         string[]? position = e.GetElementOrNull("Position")?.Split(',', 2);
         Position_X = Utils.ParseDoubleOrNull(position?[0]) ?? 0;
         Position_Y = Utils.ParseDoubleOrNull(position?[1]) ?? 0;
-
         string[]? skew = e.GetElementOrNull("Skew")?.Split(',', 2);
         Skew_X = Utils.ParseDoubleOrNull(skew?[0]) ?? 0;
         Skew_Y = Utils.ParseDoubleOrNull(skew?[1]) ?? 0;
-
         string[]? scale = e.GetElementOrNull("Scale")?.Split(',', 2);
         Scale_X = Utils.ParseDoubleOrNull(scale?[0]) ?? 1;
         Scale_Y = Utils.ParseDoubleOrNull(scale?[1]) ?? 1;
-
         Rotation = e.GetDoubleElement("Rotation", 0);
-        FrameOffset = e.GetIntElement("FrameOffset", 0);
-        ForceDraw = e.GetBoolElement("ForceDraw", false);
-        Loops = e.GetUIntElement("Loops", 0);
     }
 
     public void Serialize(XElement e)
@@ -75,6 +76,12 @@ public class AnimatedBackground : IDeserializable, ISerializable, IDrawable
 
         if (Loops != 0)
             e.AddChild("Loops", Loops);
+
+        if (SoundString is not null && SoundString != "")
+            e.AddChild("SoundString", SoundString);
+
+        if (SoundFrame is not null)
+            e.AddChild("SoundFrame", SoundFrame.Value);
     }
 
     public void DrawOn(ICanvas canvas, Transform trans, RenderConfig config, RenderContext context, RenderState state)

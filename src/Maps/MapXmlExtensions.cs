@@ -6,7 +6,7 @@ namespace WallyMapSpinzor2;
 public static class MapXmlExtensions
 {
     public static AbstractCollision[] DeserializeCollisionChildren(this XElement e) =>
-        [.. e.Elements().Select(DeserializeCollision).Where(c => c is not null)];
+        [.. e.Elements().Select(DeserializeCollision).Where(c => c is not null)!];
 
     public static AbstractCollision? DeserializeCollision(this XElement e) => e.Name.LocalName switch
     {
@@ -27,7 +27,7 @@ public static class MapXmlExtensions
     };
 
     public static AbstractItemSpawn[] DeserializeItemSpawnChildren(this XElement e) =>
-        [.. e.Elements().Select(DeserializeItemSpawn).Where(i => i is not null)];
+        [.. e.Elements().Select(DeserializeItemSpawn).Where(i => i is not null)!];
 
     public static AbstractItemSpawn? DeserializeItemSpawn(this XElement e) => e.Name.LocalName switch
     {
@@ -39,7 +39,7 @@ public static class MapXmlExtensions
     };
 
     public static AbstractVolume[] DeserializeVolumeChildren(this XElement e) =>
-        [.. e.Elements().Select(DeserializeVolume).Where(v => v is not null)];
+        [.. e.Elements().Select(DeserializeVolume).Where(v => v is not null)!];
 
     public static AbstractVolume? DeserializeVolume(this XElement e) => e.Name.LocalName switch
     {
@@ -50,7 +50,7 @@ public static class MapXmlExtensions
     };
 
     public static AbstractKeyFrame[] DeserializeKeyFrameChildren(this XElement e) =>
-        [.. e.Elements().Select(DeserializeKeyFrame).Where(k => k is not null)];
+        [.. e.Elements().Select(DeserializeKeyFrame).Where(k => k is not null)!];
 
     public static AbstractKeyFrame? DeserializeKeyFrame(this XElement e) => e.Name.LocalName switch
     {
@@ -60,7 +60,7 @@ public static class MapXmlExtensions
     };
 
     public static AbstractAsset[] DeserializeAssetChildren(this XElement e) =>
-        [.. e.Elements().Select(DeserializeAsset).Where(a => a is not null)];
+        [.. e.Elements().Select(DeserializeAsset).Where(a => a is not null)!];
 
     public static AbstractAsset? DeserializeAsset(this XElement e) => e.Name.LocalName switch
     {

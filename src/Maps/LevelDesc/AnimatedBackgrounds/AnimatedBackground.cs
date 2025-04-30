@@ -49,6 +49,9 @@ public class AnimatedBackground : IDeserializable, ISerializable, IDrawable
         Scale_X = Utils.ParseDoubleOrNull(scale?[0]) ?? 1;
         Scale_Y = Utils.ParseDoubleOrNull(scale?[1]) ?? 1;
         Rotation = e.GetDoubleElement("Rotation", 0);
+
+        SoundString = e.GetElementOrNull("SoundString");
+        SoundFrame = e.GetUIntElementOrNull("SoundFrame");
     }
 
     public void Serialize(XElement e)

@@ -210,16 +210,7 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
             (double, double)[] timerLocations = [.. ItemSpawns
                 .OfType<ItemSpawn>()
                 .Select(i => (i.X + i.W / 2, i.Y + i.H / 2))
-                .OrderBy
-                (
-                    _ => _,
-                    Comparer<(double, double)>.Create(((double, double) a, (double, double) b) =>
-                    {
-                        int result = (int)(a.Item1 - b.Item1);
-                        if (result == 0) result = (int)(a.Item2 - b.Item2);
-                        return result;
-                    })
-                )
+                .OrderBy(_ => _,BombsketballTimerPositionComparer.Singleton)
             ];
 
             if (timerLocations.Length >= 3)
@@ -353,5 +344,17 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
         for (int i = 0; i < 10; ++i) _rightPaths[i] = [.. BrawlhallaMath.GenerateHordePath(rand, boundX, boundY, boundW, boundH, door1CX, door1CY, door2CX, door2CY, DirEnum.RIGHT, PathEnum.CLOSE, i)];
         for (int i = 0; i < 10; ++i) _rightPaths[i + 10] = [.. BrawlhallaMath.GenerateHordePath(rand, boundX, boundY, boundW, boundH, door1CX, door1CY, door2CX, door2CY, DirEnum.RIGHT, PathEnum.FAR, i)];
         for (int i = 0; i < 20; ++i) _bottomPaths[i] = [.. BrawlhallaMath.GenerateHordePath(rand, boundX, boundY, boundW, boundH, door1CX, door1CY, door2CX, door2CY, DirEnum.BOTTOM, PathEnum.ANY, i)];
+    }
+
+    private sealed class BombsketballTimerPositionComparer : IComparer<(double, double)>
+    {
+        public static BombsketballTimerPositionComparer Singleton { get; } = new();
+
+        public int Compare((double, double) a, (double, double) b)
+        {
+            int result = (int)(a.Item1 - b.Item1);
+            if (result == 0) result = (int)(a.Item2 - b.Item2);
+            return result;
+        }
     }
 }

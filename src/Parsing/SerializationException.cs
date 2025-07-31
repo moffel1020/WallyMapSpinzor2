@@ -3,7 +3,7 @@ using System;
 namespace WallyMapSpinzor2;
 
 [Serializable]
-public class SerializationException : Exception
+public sealed class SerializationException : Exception
 {
     public SerializationException() { }
     public SerializationException(string message) : base(message) { }

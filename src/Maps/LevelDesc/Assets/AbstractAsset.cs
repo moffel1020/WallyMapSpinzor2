@@ -4,7 +4,7 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public abstract class AbstractAsset : ISerializable, IDeserializable, IDrawable
+public abstract class AbstractAsset : ISerializable, IDrawable
 {
     public string? AssetName { get; set; }
     public double Rotation { get; set; }
@@ -17,7 +17,8 @@ public abstract class AbstractAsset : ISerializable, IDeserializable, IDrawable
 
     public AbstractAsset? Parent { get; set; }
 
-    public virtual void Deserialize(XElement e)
+    public AbstractAsset() { }
+    protected AbstractAsset(XElement e)
     {
         AssetName = e.GetAttributeOrNull("AssetName");
         Rotation = e.GetDoubleAttribute("Rotation", 0);

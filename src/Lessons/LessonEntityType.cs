@@ -2,7 +2,7 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class LessonEntityType : IDeserializable, ISerializable
+public sealed class LessonEntityType : IDeserializable<LessonEntityType>, ISerializable
 {
     public EntityRoleEnum Role { get; set; }
     public string HeroType { get; set; } = null!; // player and sensei should have the same
@@ -14,7 +14,8 @@ public class LessonEntityType : IDeserializable, ISerializable
     public double StartingDamage { get; set; }
     public string? BotReaction { get; set; }
 
-    public void Deserialize(XElement e)
+    public LessonEntityType() { }
+    private LessonEntityType(XElement e)
     {
         Role = e.GetEnumAttribute<EntityRoleEnum>("Role");
         HeroType = e.GetElement("HeroType");
@@ -28,6 +29,7 @@ public class LessonEntityType : IDeserializable, ISerializable
         StartingDamage = e.GetDoubleElement("StartingDamage", 0);
         BotReaction = e.GetElementOrNull("BotReaction");
     }
+    public static LessonEntityType Deserialize(XElement e) => new(e);
 
     public void Serialize(XElement e)
     {

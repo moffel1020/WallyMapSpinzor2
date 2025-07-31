@@ -2,13 +2,14 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class LessonItem : IDeserializable, ISerializable
+public sealed class LessonItem : IDeserializable<LessonItem>, ISerializable
 {
     public string ItemType { get; set; } = null!;
     public double Position_X { get; set; }
     public double Position_Y { get; set; }
 
-    public void Deserialize(XElement e)
+    public LessonItem() { }
+    private LessonItem(XElement e)
     {
         ItemType = e.GetAttribute("ItemType");
 
@@ -24,6 +25,7 @@ public class LessonItem : IDeserializable, ISerializable
             Position_X = Position_Y = 0;
         }
     }
+    public static LessonItem Deserialize(XElement e) => new(e);
 
     public void Serialize(XElement e)
     {

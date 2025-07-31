@@ -2,7 +2,7 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class TeamScoreboard : IDeserializable, ISerializable, IDrawable
+public sealed class TeamScoreboard : IDeserializable<TeamScoreboard>, ISerializable, IDrawable
 {
     //yes, brawlhalla defines those as ints
     public int RedTeamX { get; set; }
@@ -15,7 +15,8 @@ public class TeamScoreboard : IDeserializable, ISerializable, IDrawable
     public string RedDigitFont { get; set; } = null!;
     public string BlueDigitFont { get; set; } = null!;
 
-    public void Deserialize(XElement e)
+    public TeamScoreboard() { }
+    private TeamScoreboard(XElement e)
     {
         RedTeamX = e.GetIntAttribute("RedTeamX", 0);
         BlueTeamX = e.GetIntAttribute("BlueTeamX", 0);
@@ -28,6 +29,7 @@ public class TeamScoreboard : IDeserializable, ISerializable, IDrawable
         RedDigitFont = e.GetAttribute("RedDigitFont");
         BlueDigitFont = e.GetAttribute("BlueDigitFont");
     }
+    public static TeamScoreboard Deserialize(XElement e) => new(e);
 
     public void Serialize(XElement e)
     {

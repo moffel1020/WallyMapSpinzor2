@@ -2,7 +2,7 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public abstract class AbstractItemSpawn : IDeserializable, ISerializable, IDrawable
+public abstract class AbstractItemSpawn : ISerializable, IDrawable
 {
     public double H { get; set; }
     public double W { get; set; }
@@ -11,7 +11,8 @@ public abstract class AbstractItemSpawn : IDeserializable, ISerializable, IDrawa
 
     public DynamicItemSpawn? Parent { get; set; }
 
-    public void Deserialize(XElement e)
+    public AbstractItemSpawn() { }
+    protected AbstractItemSpawn(XElement e)
     {
         H = e.GetDoubleAttribute("H", DefaultH);
         W = e.GetDoubleAttribute("W", DefaultW);

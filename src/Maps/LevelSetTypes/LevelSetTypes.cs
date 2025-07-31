@@ -2,14 +2,15 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class LevelSetTypes : IDeserializable, ISerializable
+public sealed class LevelSetTypes : IDeserializable<LevelSetTypes>, ISerializable
 {
     public LevelSetType[] Playlists { get; set; } = null!;
 
-    public void Deserialize(XElement e)
+    private LevelSetTypes(XElement e)
     {
         Playlists = e.DeserializeChildrenOfType<LevelSetType>();
     }
+    public static LevelSetTypes Deserialize(XElement e) => new(e);
 
     public void Serialize(XElement e)
     {

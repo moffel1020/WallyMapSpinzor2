@@ -2,19 +2,22 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class SpawnBotBounds : IDeserializable, ISerializable, IDrawable
+public sealed class SpawnBotBounds : IDeserializable<SpawnBotBounds>, ISerializable, IDrawable
 {
     public double H { get; set; }
     public double W { get; set; }
     public double X { get; set; }
     public double Y { get; set; }
-    public void Deserialize(XElement e)
+
+    public SpawnBotBounds() { }
+    private SpawnBotBounds(XElement e)
     {
         H = e.GetDoubleAttribute("H");
         W = e.GetDoubleAttribute("W");
         X = e.GetDoubleAttribute("X");
         Y = e.GetDoubleAttribute("Y");
     }
+    public static SpawnBotBounds Deserialize(XElement e) => new(e);
 
     public void Serialize(XElement e)
     {

@@ -3,12 +3,13 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class ColorSwap : IDeserializable, ISerializable
+public sealed class ColorSwap : IDeserializable<ColorSwap>, ISerializable
 {
     public uint OldColor { get; set; }
     public uint NewColor { get; set; }
 
-    public void Deserialize(XElement e)
+    public ColorSwap() { }
+    private ColorSwap(XElement e)
     {
         string str = e.Value;
         string[] parts = str.Split('=');
@@ -37,6 +38,7 @@ public class ColorSwap : IDeserializable, ISerializable
             NewColor = uint.Parse(newColor, CultureInfo.InvariantCulture);
         }
     }
+    public static ColorSwap Deserialize(XElement e) => new(e);
 
     public void Serialize(XElement e)
     {

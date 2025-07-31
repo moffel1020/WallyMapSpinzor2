@@ -3,7 +3,7 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class Group : IDeserializable, ISerializable
+public sealed class Group : IDeserializable<Group>, ISerializable
 {
     public uint? Count { get; set; }
     public uint? Count3 { get; set; }
@@ -22,7 +22,8 @@ public class Group : IDeserializable, ISerializable
 
     public WaveData? Parent { get; set; }
 
-    public void Deserialize(XElement e)
+    public Group() { }
+    private Group(XElement e)
     {
         Count = e.GetUIntAttributeOrNull("Count");
         Count3 = e.GetUIntAttributeOrNull("Count3");
@@ -39,6 +40,7 @@ public class Group : IDeserializable, ISerializable
         Shared = MapUtils.IsSharedDir(Dir) || e.GetBoolAttribute("Shared", false);
         SharedPath = MapUtils.IsSharedPath(Path) || e.GetBoolAttribute("SharedPath", false);
     }
+    public static Group Deserialize(XElement e) => new(e);
 
     public void Serialize(XElement e)
     {

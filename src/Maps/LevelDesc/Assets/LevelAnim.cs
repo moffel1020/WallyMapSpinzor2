@@ -2,7 +2,7 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class LevelAnim : IDeserializable, ISerializable, IDrawable
+public sealed class LevelAnim : IDeserializable<LevelAnim>, ISerializable, IDrawable
 {
     private const string FOREGROUND = "am_Foreground";
     private const string BACKGROUND = "am_Background";
@@ -29,14 +29,15 @@ public class LevelAnim : IDeserializable, ISerializable, IDrawable
     //supposedly related to platform king, but code doesn't reveal much.
     public bool ColorPlatform => InstanceName.StartsWith(COLOR_PLATFORM);
 
-
-    public void Deserialize(XElement e)
+    public LevelAnim() { }
+    private LevelAnim(XElement e)
     {
         InstanceName = e.GetAttribute("InstanceName");
         AssetName = e.GetAttribute("AssetName");
         X = e.GetDoubleAttribute("X");
         Y = e.GetDoubleAttribute("Y");
     }
+    public static LevelAnim Deserialize(XElement e) => new(e);
 
     public void Serialize(XElement e)
     {

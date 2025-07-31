@@ -4,7 +4,7 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class LevelType : IDeserializable, ISerializable
+public sealed class LevelType : IDeserializable<LevelType>, ISerializable
 {
     private const string TEMPLATE_LEVEL_TYPE = "Template";
     private static readonly TeamColorEnum[] DEFAULT_TEAM_COLOR_ORDER = [TeamColorEnum.Red, TeamColorEnum.Blue, TeamColorEnum.Yellow, TeamColorEnum.Purple];
@@ -60,7 +60,8 @@ public class LevelType : IDeserializable, ISerializable
     public double? AIGroundLine { get; set; }
     public int? ShadowTint { get; set; } // yes, this is an int and not a uint
 
-    public void Deserialize(XElement e)
+    public LevelType() { }
+    private LevelType(XElement e)
     {
         LevelName = e.GetAttribute("LevelName");
         DevOnly = e.GetBoolAttribute("DevOnly", false);
@@ -115,6 +116,7 @@ public class LevelType : IDeserializable, ISerializable
         AIGroundLine = e.GetDoubleElementOrNull("AIGroundLine");
         ShadowTint = e.GetIntElementOrNull("ShadowTint");
     }
+    public static LevelType Deserialize(XElement e) => new(e);
 
     public void Serialize(XElement e)
     {

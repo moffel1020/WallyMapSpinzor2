@@ -4,16 +4,17 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class LevelTypes : IDeserializable, ISerializable
+public sealed class LevelTypes : IDeserializable<LevelTypes>, ISerializable
 {
     public LevelType[] Levels { get; set; } = null!;
 
     public const uint MAX_LEVEL_ID = 319;
 
-    public void Deserialize(XElement e)
+    private LevelTypes(XElement e)
     {
         Levels = e.DeserializeChildrenOfType<LevelType>();
     }
+    public static LevelTypes Deserialize(XElement e) => new(e);
 
     public void Serialize(XElement e)
     {

@@ -4,24 +4,24 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public abstract class ComboPart : IDeserializable, ISerializable
+public abstract class ComboPart : ISerializable
 {
     public abstract int TypeIndex { get; }
     public abstract string TypeName { get; }
     public abstract bool TwoPartData { get; }
 
-    public static ComboPart? New(string type) => type switch
+    public static ComboPart? New(XElement e) => e.Name.LocalName switch
     {
-        "PowerCast" => new PowerCast(),
-        "PowerHit" => new PowerHit(),
-        "PowerEnd" => new PowerEnd(),
-        "ActiveInput" => new ActiveInput(),
-        "Throw" => new Throw(),
-        "Jump" => new Jump(),
-        "Dodge" => new Dodge(),
-        "Dash" => new Dash(),
-        "Pickup" => new Pickup(),
-        "HitByEnemy" => new HitByEnemy(),
+        "PowerCast" => e.DeserializeTo<PowerCast>(),
+        "PowerHit" => e.DeserializeTo<PowerHit>(),
+        "PowerEnd" => e.DeserializeTo<PowerEnd>(),
+        "ActiveInput" => e.DeserializeTo<ActiveInput>(),
+        "Throw" => e.DeserializeTo<Throw>(),
+        "Jump" => e.DeserializeTo<Jump>(),
+        "Dodge" => e.DeserializeTo<Dodge>(),
+        "Dash" => e.DeserializeTo<Dash>(),
+        "Pickup" => e.DeserializeTo<Pickup>(),
+        "HitByEnemy" => e.DeserializeTo<HitByEnemy>(),
         _ => null,
     };
 
@@ -36,7 +36,8 @@ public abstract class ComboPart : IDeserializable, ISerializable
     public string? Hint { get; set; }
     public uint Time { get; set; }
 
-    public void Deserialize(XElement e)
+    public ComboPart() { }
+    protected ComboPart(XElement e)
     {
         CmdOvr = e.GetUIntAttribute("CmdOvr", 0);
 
@@ -97,8 +98,12 @@ public abstract class ComboPart : IDeserializable, ISerializable
     Flags = 1 if gc, 0 otherwise
     CmdOvr = N/A
     */
-    public class PowerCast : ComboPart
+    public sealed class PowerCast : ComboPart, IDeserializable<PowerCast>
     {
+        public PowerCast() : base() { }
+        private PowerCast(XElement e) : base(e) { }
+        public static PowerCast Deserialize(XElement e) => new(e);
+
         public override int TypeIndex => 1;
         public override string TypeName => "PowerCast";
         public override bool TwoPartData => true;
@@ -116,8 +121,12 @@ public abstract class ComboPart : IDeserializable, ISerializable
         67108864 - cd cancel
     CmdOvr - N/A
     */
-    public class PowerHit : ComboPart
+    public sealed class PowerHit : ComboPart, IDeserializable<PowerHit>
     {
+        public PowerHit() : base() { }
+        private PowerHit(XElement e) : base(e) { }
+        public static PowerHit Deserialize(XElement e) => new(e);
+
         public override int TypeIndex => 2;
         public override string TypeName => "PowerHit";
         public override bool TwoPartData => true;
@@ -129,8 +138,12 @@ public abstract class ComboPart : IDeserializable, ISerializable
     Flags = N/A
     CmdOvr = N/A
     */
-    public class PowerEnd : ComboPart
+    public sealed class PowerEnd : ComboPart, IDeserializable<PowerEnd>
     {
+        public PowerEnd() : base() { }
+        private PowerEnd(XElement e) : base(e) { }
+        public static PowerEnd Deserialize(XElement e) => new(e);
+
         public override int TypeIndex => 3;
         public override string TypeName => "PowerEnd";
         public override bool TwoPartData => true;
@@ -146,8 +159,12 @@ public abstract class ComboPart : IDeserializable, ISerializable
         8 - forward
     CmdOvr = ?
     */
-    public class ActiveInput : ComboPart
+    public sealed class ActiveInput : ComboPart, IDeserializable<ActiveInput>
     {
+        public ActiveInput() : base() { }
+        private ActiveInput(XElement e) : base(e) { }
+        public static ActiveInput Deserialize(XElement e) => new(e);
+
         public override int TypeIndex => 4;
         public override string TypeName => "ActiveInput";
         public override bool TwoPartData => true;
@@ -159,8 +176,12 @@ public abstract class ComboPart : IDeserializable, ISerializable
     Flags = N/A
     CmdOvr = N/A
     */
-    public class Throw : ComboPart
+    public sealed class Throw : ComboPart, IDeserializable<Throw>
     {
+        public Throw() : base() { }
+        private Throw(XElement e) : base(e) { }
+        public static Throw Deserialize(XElement e) => new(e);
+
         public override int TypeIndex => 5;
         public override string TypeName => "Throw";
         public override bool TwoPartData => false;
@@ -172,8 +193,12 @@ public abstract class ComboPart : IDeserializable, ISerializable
     Flags = 1 if dashjump, 0 otherwise
     CmdOvr = N/A
     */
-    public class Jump : ComboPart
+    public sealed class Jump : ComboPart, IDeserializable<Jump>
     {
+        public Jump() : base() { }
+        private Jump(XElement e) : base(e) { }
+        public static Jump Deserialize(XElement e) => new(e);
+
         public override int TypeIndex => 6;
         public override string TypeName => "Jump";
         public override bool TwoPartData => false;
@@ -192,8 +217,12 @@ public abstract class ComboPart : IDeserializable, ISerializable
         4 - aerial and not cd
     CmdOvr = N/A
     */
-    public class Dodge : ComboPart
+    public sealed class Dodge : ComboPart, IDeserializable<Dodge>
     {
+        public Dodge() : base() { }
+        private Dodge(XElement e) : base(e) { }
+        public static Dodge Deserialize(XElement e) => new(e);
+
         public override int TypeIndex => 7;
         public override string TypeName => "Dodge";
         public override bool TwoPartData => false;
@@ -212,8 +241,12 @@ public abstract class ComboPart : IDeserializable, ISerializable
     Flags = N/A
     CmdOvr = N/A
     */
-    public class Dash : ComboPart
+    public sealed class Dash : ComboPart, IDeserializable<Dash>
     {
+        public Dash() : base() { }
+        private Dash(XElement e) : base(e) { }
+        public static Dash Deserialize(XElement e) => new(e);
+
         public override int TypeIndex => 8;
         public override string TypeName => "Dash";
         public override bool TwoPartData => false;
@@ -225,8 +258,12 @@ public abstract class ComboPart : IDeserializable, ISerializable
     Flags = N/A
     CmdOvr = N/A
     */
-    public class Pickup : ComboPart
+    public sealed class Pickup : ComboPart, IDeserializable<Pickup>
     {
+        public Pickup() : base() { }
+        private Pickup(XElement e) : base(e) { }
+        public static Pickup Deserialize(XElement e) => new(e);
+
         public override int TypeIndex => 9;
         public override string TypeName => "Pickup";
         public override bool TwoPartData => false;
@@ -238,8 +275,12 @@ public abstract class ComboPart : IDeserializable, ISerializable
     Flags = ?
     CmdOvr = ?
     */
-    public class HitByEnemy : ComboPart
+    public sealed class HitByEnemy : ComboPart, IDeserializable<HitByEnemy>
     {
+        public HitByEnemy() : base() { }
+        private HitByEnemy(XElement e) : base(e) { }
+        public static HitByEnemy Deserialize(XElement e) => new(e);
+
         public override int TypeIndex => 10;
         public override string TypeName => "HitByEnemy";
         public override bool TwoPartData => true;

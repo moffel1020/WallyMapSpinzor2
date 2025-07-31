@@ -3,19 +3,21 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class Phase : AbstractKeyFrame
+public sealed class Phase : AbstractKeyFrame, IDeserializable<Phase>
 {
     public int StartFrame { get; set; }
 
     public AbstractKeyFrame[] KeyFrames { get; set; } = null!;
 
-    public override void Deserialize(XElement e)
+    public Phase() { }
+    private Phase(XElement e)
     {
         StartFrame = e.GetIntAttribute("StartFrame", 0);
         KeyFrames = e.DeserializeKeyFrameChildren();
         foreach (AbstractKeyFrame k in KeyFrames)
             k.Parent = this;
     }
+    public static Phase Deserialize(XElement e) => new(e);
 
     public override void Serialize(XElement e)
     {

@@ -2,7 +2,7 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class LevelSound : IDeserializable, ISerializable
+public sealed class LevelSound : IDeserializable<LevelSound>, ISerializable
 {
     public string SoundEventName { get; set; } = null!;
     public uint Interval { get; set; }
@@ -11,7 +11,8 @@ public class LevelSound : IDeserializable, ISerializable
     public int TotalLoops { get; set; } // 0 means infinite
     public bool IgnoreOnBlurBG { get; set; }
 
-    public void Deserialize(XElement e)
+    public LevelSound() { }
+    private LevelSound(XElement e)
     {
         SoundEventName = e.GetAttribute("SoundEventName");
         Interval = e.GetUIntAttribute("Interval", 0);
@@ -20,6 +21,7 @@ public class LevelSound : IDeserializable, ISerializable
         TotalLoops = e.GetIntAttribute("TotalLoops", 0);
         IgnoreOnBlurBG = e.GetBoolAttribute("IgnoreOnBlurBG", false);
     }
+    public static LevelSound Deserialize(XElement e) => new(e);
 
     public void Serialize(XElement e)
     {

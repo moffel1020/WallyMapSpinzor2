@@ -5,7 +5,7 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class Background : IDeserializable, ISerializable, IDrawable
+public sealed class Background : IDeserializable<Background>, ISerializable, IDrawable
 {
     private const string BACKGROUND_FOLDER = "Backgrounds";
 
@@ -16,7 +16,8 @@ public class Background : IDeserializable, ISerializable, IDrawable
     public double H { get; set; }
     public double W { get; set; }
 
-    public void Deserialize(XElement e)
+    public Background() { }
+    private Background(XElement e)
     {
         AssetName = e.GetAttribute("AssetName");
         AnimatedAssetName = e.GetAttributeOrNull("AnimatedAssetName");
@@ -25,6 +26,7 @@ public class Background : IDeserializable, ISerializable, IDrawable
         H = e.GetDoubleAttribute("H");
         W = e.GetDoubleAttribute("W");
     }
+    public static Background Deserialize(XElement e) => new(e);
 
     public void Serialize(XElement e)
     {

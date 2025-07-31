@@ -4,7 +4,7 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class LevelAnimation : IDeserializable, ISerializable, IDrawable
+public sealed class LevelAnimation : IDeserializable<LevelAnimation>, ISerializable, IDrawable
 {
     public string[] AnimationName { get; set; } = null!;
     public bool PlayMidground { get; set; }
@@ -26,7 +26,8 @@ public class LevelAnimation : IDeserializable, ISerializable, IDrawable
     public string? PlatID { get; set; }
     public bool IgnoreOnBlurBG { get; set; }
 
-    public void Deserialize(XElement e)
+    public LevelAnimation() { }
+    private LevelAnimation(XElement e)
     {
         AnimationName = e.GetAttribute("AnimationName").Split(',');
         PlayMidground = e.GetBoolAttribute("PlayMidground", false);
@@ -48,6 +49,7 @@ public class LevelAnimation : IDeserializable, ISerializable, IDrawable
         PlatID = e.GetAttributeOrNull("PlatID");
         IgnoreOnBlurBG = e.GetBoolAttribute("IgnoreOnBlurBG", false);
     }
+    public static LevelAnimation Deserialize(XElement e) => new(e);
 
     public void Serialize(XElement e)
     {

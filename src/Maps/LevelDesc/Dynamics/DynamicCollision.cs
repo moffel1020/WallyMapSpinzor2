@@ -3,8 +3,12 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class DynamicCollision : AbstractDynamic<AbstractCollision>
+public sealed class DynamicCollision : AbstractDynamic<AbstractCollision>, IDeserializable<DynamicCollision>
 {
+    public DynamicCollision() : base() { }
+    DynamicCollision(XElement e) : base(e) { }
+    public static DynamicCollision Deserialize(XElement e) => new(e);
+
     public override void DeserializeChildren(XElement element)
     {
         Children = element.DeserializeCollisionChildren();

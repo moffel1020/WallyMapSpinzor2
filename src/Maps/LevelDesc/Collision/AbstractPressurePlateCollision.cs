@@ -18,9 +18,9 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
     public string? PlatID { get; set; }
     public string[] TrapPowers { get; set; } = null!;
 
-    public override void Deserialize(XElement e)
+    public AbstractPressurePlateCollision() { }
+    protected AbstractPressurePlateCollision(XElement e) : base(e)
     {
-        base.Deserialize(e);
         AnimOffsetX = e.GetDoubleAttribute("AnimOffsetX", 0);
         AnimOffsetY = e.GetDoubleAttribute("AnimOffsetY", 0);
         AnimRotation = e.GetDoubleAttribute("AnimRotation", 0);
@@ -33,7 +33,7 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
         TrapPowers = e.GetAttribute("TrapPowers").Split(',');
     }
 
-    public override void Serialize(XElement e)
+    public sealed override void Serialize(XElement e)
     {
         e.SetAttributeValue("AnimOffsetX", AnimOffsetX);
         e.SetAttributeValue("AnimOffsetY", AnimOffsetY);
@@ -52,7 +52,7 @@ public abstract class AbstractPressurePlateCollision : AbstractCollision
         base.Serialize(e);
     }
 
-    public override void DrawOn(ICanvas canvas, Transform trans, RenderConfig config, RenderContext context, RenderState state)
+    public sealed override void DrawOn(ICanvas canvas, Transform trans, RenderConfig config, RenderContext context, RenderState state)
     {
         base.DrawOn(canvas, trans, config, context, state);
 

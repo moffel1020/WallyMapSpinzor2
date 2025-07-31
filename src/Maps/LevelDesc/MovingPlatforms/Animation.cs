@@ -4,7 +4,7 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class Animation : IDeserializable, ISerializable
+public sealed class Animation : IDeserializable<Animation>, ISerializable
 {
     //these two can get a default from LevelDesc
     public int? NumFrames { get; set; }
@@ -18,7 +18,9 @@ public class Animation : IDeserializable, ISerializable
     public AbstractKeyFrame[] KeyFrames { get; set; } = null!;
 
     public bool HasCenter => CenterX is not null || CenterY is not null;
-    public void Deserialize(XElement e)
+
+    public Animation() { }
+    private Animation(XElement e)
     {
         NumFrames = e.GetIntAttributeOrNull("NumFrames");
         SlowMult = e.GetDoubleAttributeOrNull("SlowMult");
@@ -33,6 +35,7 @@ public class Animation : IDeserializable, ISerializable
         StartFrame = e.GetUIntAttribute("StartFrame", 0);
         KeyFrames = e.DeserializeKeyFrameChildren();
     }
+    public static Animation Deserialize(XElement e) => new(e);
 
     public void Serialize(XElement e)
     {

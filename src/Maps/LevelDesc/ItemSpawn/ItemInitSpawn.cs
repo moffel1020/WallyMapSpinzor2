@@ -1,7 +1,13 @@
+using System.Xml.Linq;
+
 namespace WallyMapSpinzor2;
 
-public class ItemInitSpawn : AbstractItemSpawn
+public sealed class ItemInitSpawn : AbstractItemSpawn, IDeserializable<ItemInitSpawn>
 {
+    public ItemInitSpawn() : base() { }
+    private ItemInitSpawn(XElement e) : base(e) { }
+    public static ItemInitSpawn Deserialize(XElement e) => new(e);
+
     public override double DefaultX => 1.79769313486231e+308;
     public override double DefaultY => 1.79769313486231e+308;
     public override double DefaultW => 50;

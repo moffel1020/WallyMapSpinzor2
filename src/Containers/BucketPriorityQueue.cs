@@ -7,14 +7,14 @@ namespace WallyMapSpinzor2;
 /// A bucket-based priority queue. Used to handle drawing order.
 /// </summary>
 /// <typeparam name="T">The type of elements in the collection</typeparam>
-public class BucketPriorityQueue<T>
+public sealed class BucketPriorityQueue<T>
 {
     private int _count;
 
     public int Count => _count;
-    public Queue<T>[] Buckets { get; protected set; }
-    public int MinBucket { get; protected set; }
-    public int MaxBucket { get; protected set; }
+    public Queue<T>[] Buckets { get; private set; }
+    public int MinBucket { get; private set; }
+    public int MaxBucket { get; private set; }
 
     public BucketPriorityQueue(int bucketCount)
     {
@@ -35,7 +35,7 @@ public class BucketPriorityQueue<T>
         _count++;
     }
 
-    protected void UpdateMinBucket()
+    private void UpdateMinBucket()
     {
         while (MinBucket < Buckets.Length && Buckets[MinBucket].Count == 0) MinBucket++;
     }
@@ -48,7 +48,7 @@ public class BucketPriorityQueue<T>
         return Buckets[MinBucket].Dequeue();
     }
 
-    protected void UpdateMaxBucket()
+    private void UpdateMaxBucket()
     {
         while (MaxBucket >= 0 && Buckets[MaxBucket].Count == 0) MaxBucket--;
     }

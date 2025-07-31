@@ -6,14 +6,11 @@ using System.Xml.Linq;
 namespace WallyMapSpinzor2;
 
 // Not a real brawlhalla object. Just a way for us to store all of the data in the same place.
-public class Level : IDeserializable, ISerializable, IDrawable
+public sealed class Level : IDeserializable<Level>, ISerializable, IDrawable
 {
     public LevelDesc Desc { get; set; }
     public LevelType? Type { get; set; }
     public HashSet<string> Playlists { get; set; }
-
-    // this exists to be able to use Deserialize<T>
-    public Level() { Desc = null!; Playlists = []; }
 
     public Level(LevelDesc ld, LevelType? lt, HashSet<string> playlists) =>
         (Desc, Type, Playlists) = lt is not null && ld.LevelName != lt.LevelName
@@ -24,10 +21,9 @@ public class Level : IDeserializable, ISerializable, IDrawable
     {
         Desc = ld;
         Type = Array.Find(lt.Levels, l => l.LevelName == Desc.LevelName);
-        Playlists = lst.Playlists
+        Playlists = [.. lst.Playlists
             .Where(l => l.LevelTypes.Contains(Desc.LevelName))
-            .Select(l => l.LevelSetName)
-            .ToHashSet();
+            .Select(l => l.LevelSetName)];
     }
 
     public void SetLevelName(LevelSetTypes types, string name)
@@ -48,12 +44,13 @@ public class Level : IDeserializable, ISerializable, IDrawable
         if (Type is not null) Type.LevelName = name;
     }
 
-    public void Deserialize(XElement e)
+    private Level(XElement e)
     {
         Desc = e.DeserializeChildOfType<LevelDesc>() ?? throw new ArgumentException("Given XML file does not contain a LevelDesc element. Invalid save format.");
         Type = e.DeserializeChildOfType<LevelType>();
         Playlists = e.GetElementOrNull("Playlists")?.Split(",").ToHashSet() ?? throw new ArgumentException("Given XML file does not contain a Playlists element. Invalid save format.");
     }
+    public static Level Deserialize(XElement e) => new(e);
 
     public void Serialize(XElement e)
     {

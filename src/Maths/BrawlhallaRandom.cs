@@ -2,7 +2,7 @@ using System;
 
 namespace WallyMapSpinzor2;
 
-public class BrawlhallaRandom
+public sealed class BrawlhallaRandom
 {
     public int Index { get; private set; }
     public uint[] State { get; private set; } = new uint[16];

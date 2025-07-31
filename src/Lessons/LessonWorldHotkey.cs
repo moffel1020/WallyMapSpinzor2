@@ -3,13 +3,14 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class LessonWorldHotkey : IDeserializable, ISerializable
+public sealed class LessonWorldHotkey : IDeserializable<LessonWorldHotkey>, ISerializable
 {
     public double Position_X { get; set; }
     public double Position_Y { get; set; }
     public uint[] Commands { get; set; } = [];
 
-    public void Deserialize(XElement e)
+    public LessonWorldHotkey() { }
+    private LessonWorldHotkey(XElement e)
     {
         string[]? Position = e.GetElement("Position")?.Split(',');
         if (Position is not null)
@@ -25,6 +26,7 @@ public class LessonWorldHotkey : IDeserializable, ISerializable
 
         Commands = e.GetElementOrNull("Commands")?.Split(',').Select(uint.Parse).ToArray() ?? [];
     }
+    public static LessonWorldHotkey Deserialize(XElement e) => new(e);
 
     public void Serialize(XElement e)
     {

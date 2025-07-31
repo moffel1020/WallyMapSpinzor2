@@ -5,7 +5,7 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class NavNode : IDeserializable, ISerializable, IDrawable
+public sealed class NavNode : IDeserializable<NavNode>, ISerializable, IDrawable
 {
     public uint NavID { get; set; }
     public NavNodeTypeEnum Type { get; set; }
@@ -16,7 +16,8 @@ public class NavNode : IDeserializable, ISerializable, IDrawable
 
     public DynamicNavNode? Parent { get; set; }
 
-    public void Deserialize(XElement e)
+    public NavNode() { }
+    private NavNode(XElement e)
     {
         (NavID, Type) = ParseNavID(e.GetAttribute("NavID"));
         //the "not empty" is a guard against an empty path, where an empty string would be passed to ParseNavID
@@ -24,6 +25,7 @@ public class NavNode : IDeserializable, ISerializable, IDrawable
         X = e.GetDoubleAttribute("X", 0);
         Y = e.GetDoubleAttribute("Y", 0);
     }
+    public static NavNode Deserialize(XElement e) => new(e);
 
     // needed due to a mistake in NorseWinterFFA. emulates actionscript parseInt ignoring trailing garbage.
     private static uint UIntParse(string str)

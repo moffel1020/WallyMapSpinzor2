@@ -2,7 +2,7 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class LevelSetType : IDeserializable, ISerializable
+public sealed class LevelSetType : IDeserializable<LevelSetType>, ISerializable
 {
     private const string LEVEL_SET_TYPE_TEMPLATE_NAME = "Auto";
     private const string SKIP_ORDER_VALIDATION_TEMPLATE_STRING = "Don't abuse this to be lazy. It's for special cases like Bubble Tag where we explicitly want the order to be different.";
@@ -14,7 +14,7 @@ public class LevelSetType : IDeserializable, ISerializable
     public string[] LevelTypes { get; set; } = null!;
     public bool? SkipOrderValidation { get; set; }
 
-    public void Deserialize(XElement e)
+    private LevelSetType(XElement e)
     {
         LevelSetName = e.GetAttribute("LevelSetName");
         DisplayNameKey = e.GetElement("DisplayNameKey");
@@ -22,6 +22,7 @@ public class LevelSetType : IDeserializable, ISerializable
         LevelTypes = e.GetElementOrNull("LevelTypes")?.Split(",") ?? [];
         SkipOrderValidation = e.GetBoolElementOrNull("SkipOrderValidation");
     }
+    public static LevelSetType Deserialize(XElement e) => new(e);
 
     public void Serialize(XElement e)
     {

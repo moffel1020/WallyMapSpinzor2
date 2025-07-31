@@ -2,8 +2,12 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class DynamicNavNode : AbstractDynamic<NavNode>
+public sealed class DynamicNavNode : AbstractDynamic<NavNode>, IDeserializable<DynamicNavNode>
 {
+    public DynamicNavNode() : base() { }
+    private DynamicNavNode(XElement e) : base(e) { }
+    public static DynamicNavNode Deserialize(XElement e) => new(e);
+
     public override void DeserializeChildren(XElement element)
     {
         Children = element.DeserializeChildrenOfType<NavNode>();

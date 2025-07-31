@@ -2,15 +2,17 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class LavaCollision : AbstractCollision
+public sealed class LavaCollision : AbstractCollision, IDeserializable<LavaCollision>
 {
     public string LavaPower { get; set; } = null!;
 
-    public override void Deserialize(XElement e)
+    public LavaCollision() : base() { }
+    private LavaCollision(XElement e) : base(e)
     {
-        base.Deserialize(e);
         LavaPower = e.GetAttribute("LavaPower");
     }
+
+    public static LavaCollision Deserialize(XElement e) => new(e);
 
     public override void Serialize(XElement e)
     {

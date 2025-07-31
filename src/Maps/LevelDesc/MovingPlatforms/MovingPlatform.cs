@@ -15,15 +15,15 @@ to put its MovingPlatforms AFTER Platforms, which would alter the drawing order.
 
 thanks bmg.
 */
-public class MovingPlatform : AbstractAsset
+public sealed class MovingPlatform : AbstractAsset, IDeserializable<MovingPlatform>
 {
     public string PlatID { get; set; } = null!;
     public Animation Animation { get; set; } = null!;
     public AbstractAsset[] Assets { get; set; } = null!;
 
-    public override void Deserialize(XElement e)
+    public MovingPlatform() { }
+    private MovingPlatform(XElement e)
     {
-        base.Deserialize(e);
         PlatID = e.GetAttribute("PlatID");
         //Animation is always supposed to exist
         //The game technically supports it not existing
@@ -33,6 +33,7 @@ public class MovingPlatform : AbstractAsset
         foreach (AbstractAsset a in Assets)
             a.Parent = this;
     }
+    public static MovingPlatform Deserialize(XElement e) => new(e);
 
     public override void Serialize(XElement e)
     {

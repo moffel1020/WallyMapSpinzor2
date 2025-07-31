@@ -2,7 +2,7 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public interface IDeserializable
+public interface IDeserializable<T> where T : IDeserializable<T>
 {
-    void Deserialize(XElement e);
+    static abstract T Deserialize(XElement e);
 }

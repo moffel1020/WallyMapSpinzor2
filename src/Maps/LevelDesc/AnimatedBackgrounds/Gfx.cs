@@ -5,7 +5,7 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class Gfx : IDeserializable, ISerializable
+public sealed class Gfx : IDeserializable<Gfx>, ISerializable
 {
     public enum AsymmetrySwapFlagEnum
     {
@@ -60,7 +60,8 @@ public class Gfx : IDeserializable, ISerializable
     public bool UseRightGauntlet { get; set; } = false;
     public bool UseRightKatar { get; set; } = false;
 
-    public void Deserialize(XElement e)
+    public Gfx() { }
+    private Gfx(XElement e)
     {
         AnimFile = e.GetElement("AnimFile", "");
         AnimClass = e.GetElement("AnimClass", "a__Animation");
@@ -85,6 +86,7 @@ public class Gfx : IDeserializable, ISerializable
             .Where(e => e.Name.LocalName.StartsWith("ColorSwap"))
             .Select(e => e.DeserializeTo<ColorSwap>())];
     }
+    public static Gfx Deserialize(XElement e) => new(e);
 
     public void Serialize(XElement e)
     {

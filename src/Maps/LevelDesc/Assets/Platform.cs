@@ -4,7 +4,7 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class Platform : AbstractAsset
+public sealed class Platform : AbstractAsset, IDeserializable<Platform>
 {
     private const string NO_SKULLS = "am_NoSkulls";
     private const string HOTKEY = "am_Hotkey";
@@ -26,9 +26,9 @@ public class Platform : AbstractAsset
     public uint? Blue => InstanceName.StartsWith(BLUE) ? uint.TryParse(InstanceName[BLUE.Length..], out uint blue) ? blue : null : null;
     public uint? Red => InstanceName.StartsWith(RED) ? uint.TryParse(InstanceName[RED.Length..], out uint red) ? red : null : null;
 
-    public override void Deserialize(XElement e)
+    public Platform() : base() { }
+    private Platform(XElement e) : base(e)
     {
-        base.Deserialize(e);
         InstanceName = e.GetAttribute("InstanceName");
         PlatformAssetSwap = e.GetAttributeOrNull("PlatformAssetSwap");
         Theme = e.GetAttributeOrNull("Theme")?.Split(',');
@@ -37,6 +37,7 @@ public class Platform : AbstractAsset
         foreach (AbstractAsset a in AssetChildren ?? [])
             a.Parent = this;
     }
+    public static Platform Deserialize(XElement e) => new(e);
 
     public override void Serialize(XElement e)
     {

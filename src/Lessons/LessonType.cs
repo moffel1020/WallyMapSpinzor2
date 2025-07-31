@@ -2,7 +2,7 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class LessonType : IDeserializable, ISerializable
+public sealed class LessonType : IDeserializable<LessonType>, ISerializable
 {
     private const string TEMPLATE_LESSON_TYPE = "Template";
 
@@ -35,7 +35,8 @@ public class LessonType : IDeserializable, ISerializable
 
     public LessonCombo Combo { get; set; } = null!;
 
-    public void Deserialize(XElement e)
+    public LessonType() { }
+    private LessonType(XElement e)
     {
         LessonName = e.GetAttribute("LessonName");
         LessonID = e.GetUIntElement("LessonID");
@@ -75,6 +76,7 @@ public class LessonType : IDeserializable, ISerializable
 
         Combo = LessonName == TEMPLATE_LESSON_TYPE ? null! : e.DeserializeRequiredChildOfType<LessonCombo>("Combo");
     }
+    public static LessonType Deserialize(XElement e) => new(e);
 
     public void Serialize(XElement e)
     {

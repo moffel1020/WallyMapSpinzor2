@@ -2,7 +2,7 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class LessonMessageTrigger : IDeserializable, ISerializable
+public sealed class LessonMessageTrigger : IDeserializable<LessonMessageTrigger>, ISerializable
 {
     public double Position_X { get; set; }
     public double Position_Y { get; set; }
@@ -19,7 +19,8 @@ public class LessonMessageTrigger : IDeserializable, ISerializable
     public string? DevNote { get; set; }
     public string? MessagePosition { get; set; } // wtf?
 
-    public void Deserialize(XElement e)
+    public LessonMessageTrigger() { }
+    private LessonMessageTrigger(XElement e)
     {
         string[]? Position = e.GetElement("Position")?.Split(',');
         if (Position is not null)
@@ -45,6 +46,7 @@ public class LessonMessageTrigger : IDeserializable, ISerializable
         DevNote = e.GetElementOrNull("DevNote");
         MessagePosition = e.GetElementOrNull("MessagePosition");
     }
+    public static LessonMessageTrigger Deserialize(XElement e) => new(e);
 
     public void Serialize(XElement e)
     {

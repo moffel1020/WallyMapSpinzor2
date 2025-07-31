@@ -3,7 +3,7 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawable
+public abstract class AbstractCollision : IDrawable, ISerializable
 {
     public enum FlagEnum
     {
@@ -44,14 +44,16 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
 
     public DynamicCollision? Parent { get; set; }
 
-    public virtual void Deserialize(XElement e)
+    public AbstractCollision() { }
+
+    protected AbstractCollision(XElement e)
     {
         TauntEvent = e.GetAttributeOrNull("TauntEvent");
 
         Team = e.GetIntAttribute("Team", 0);
 
         //brawlhalla requires both attributes to exist for an anchor
-        AnchorX = AnchorY = null;
+        AnchorY = AnchorX = null;
         if (e.HasAttribute("AnchorX") && e.HasAttribute("AnchorY"))
         {
             AnchorX = e.GetDoubleAttribute("AnchorX");
@@ -96,6 +98,76 @@ public abstract class AbstractCollision : IDeserializable, ISerializable, IDrawa
                 ? colorFlag
                 : ColorFlagEnum.DEFAULT
             : null;
+    }
+
+    protected static C Deserialize<C>(XElement e) where C : AbstractCollision, new()
+    {
+        string? TauntEvent = e.GetAttributeOrNull("TauntEvent");
+
+        int Team = e.GetIntAttribute("Team", 0);
+
+        //brawlhalla requires both attributes to exist for an anchor
+        double? AnchorX = null, AnchorY = null;
+        if (e.HasAttribute("AnchorX") && e.HasAttribute("AnchorY"))
+        {
+            AnchorX = e.GetDoubleAttribute("AnchorX");
+            AnchorY = e.GetDoubleAttribute("AnchorY");
+        }
+
+        double NormalX = e.GetDoubleAttribute("NormalX", 0);
+        double NormalY = e.GetDoubleAttribute("NormalY", 0);
+
+        double X1 = 0, X2 = 0;
+        if (e.HasAttribute("X"))
+        {
+            X2 = X1 = e.GetDoubleAttribute("X");
+        }
+        else if (e.HasAttribute("X1") && e.HasAttribute("X2"))
+        {
+            X1 = e.GetDoubleAttribute("X1");
+            X2 = e.GetDoubleAttribute("X2");
+        }
+
+        double Y1 = 0, Y2 = 0;
+        if (e.HasAttribute("Y"))
+        {
+            Y2 = Y1 = e.GetDoubleAttribute("Y");
+        }
+        else if (e.HasAttribute("Y1") && e.HasAttribute("Y2"))
+        {
+            Y1 = e.GetDoubleAttribute("Y1");
+            Y2 = e.GetDoubleAttribute("Y2");
+        }
+
+        FlagEnum? Flag =
+            e.HasAttribute("Flag")
+            ? Enum.TryParse(e.GetAttribute("Flag").ToUpperInvariant(), out FlagEnum flag)
+                ? flag
+                : FlagEnum.DEFAULT
+            : null;
+
+        ColorFlagEnum? ColorFlag =
+            e.HasAttribute("ColorFlag")
+            ? Enum.TryParse(e.GetAttribute("ColorFlag")?.ToUpperInvariant(), out ColorFlagEnum colorFlag)
+                ? colorFlag
+                : ColorFlagEnum.DEFAULT
+            : null;
+
+        return new()
+        {
+            TauntEvent = TauntEvent,
+            Team = Team,
+            AnchorX = AnchorX,
+            AnchorY = AnchorY,
+            NormalX = NormalX,
+            NormalY = NormalY,
+            X1 = X1,
+            X2 = X2,
+            Y1 = Y1,
+            Y2 = Y2,
+            Flag = Flag,
+            ColorFlag = ColorFlag,
+        };
     }
 
     public virtual void Serialize(XElement e)

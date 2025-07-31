@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace WallyMapSpinzor2;
 
-public class RenderContext
+public sealed class RenderContext
 {
     public string? AssetDir { get; set; }
     public uint? ExtraStartFrame { get; set; }

@@ -2,7 +2,7 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class CustomArt : IDeserializable, ISerializable
+public sealed class CustomArt : IDeserializable<CustomArt>, ISerializable
 {
     public bool Right { get; set; } = false;
     /*
@@ -11,14 +11,16 @@ public class CustomArt : IDeserializable, ISerializable
     1 - weapon
     2 - costume
     3 - pickup (can't be set in xml)
-    4 - flag? (can't be set in xml)
-    5 - bot? (can't be set in xml)
+    4 - flag (can't be set in xml)
+    5 - sidekick (can't be set in xml)
+    6 - companion (can't be set in xml)
     */
     public int Type { get; set; } = 0;
     public string FileName { get; set; } = null!;
     public string Name { get; set; } = null!;
 
-    public void Deserialize(XElement e)
+    public CustomArt() { }
+    private CustomArt(XElement e)
     {
         string str = e.Value;
 
@@ -30,6 +32,7 @@ public class CustomArt : IDeserializable, ISerializable
         FileName = parts[0];
         Name = parts[1];
     }
+    public static CustomArt Deserialize(XElement e) => new(e);
 
     public void Serialize(XElement e)
     {

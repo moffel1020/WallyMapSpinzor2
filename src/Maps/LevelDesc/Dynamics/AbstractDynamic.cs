@@ -2,23 +2,24 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public abstract class AbstractDynamic<T> : ISerializable, IDeserializable, IDrawable
-    where T : ISerializable, IDeserializable, IDrawable
+public abstract class AbstractDynamic<T> : ISerializable, IDrawable
+    where T : ISerializable, IDrawable
 {
     public string PlatID { get; set; } = null!;
     public double X { get; set; }
     public double Y { get; set; }
     public T[] Children { get; set; } = null!;
 
-    public abstract void DeserializeChildren(XElement element);
-
-    public void Deserialize(XElement e)
+    public AbstractDynamic() { }
+    protected AbstractDynamic(XElement e)
     {
         PlatID = e.GetAttribute("PlatID");
         X = e.GetDoubleAttribute("X");
         Y = e.GetDoubleAttribute("Y");
         DeserializeChildren(e);
     }
+
+    public abstract void DeserializeChildren(XElement element);
 
     public void Serialize(XElement e)
     {

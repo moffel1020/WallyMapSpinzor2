@@ -2,7 +2,7 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public abstract class AbstractVolume : IDeserializable, ISerializable, IDrawable
+public abstract class AbstractVolume : ISerializable, IDrawable
 {
     public int X { get; set; }
     public int Y { get; set; }
@@ -11,7 +11,8 @@ public abstract class AbstractVolume : IDeserializable, ISerializable, IDrawable
     public uint Team { get; set; }
     public uint ID { get; set; }
 
-    public virtual void Deserialize(XElement e)
+    public AbstractVolume() { }
+    protected AbstractVolume(XElement e)
     {
         // For some reason Horde stores one of those values as a float, despite the game converting it to an int.
         X = (int)e.GetDoubleAttribute("X");
@@ -33,7 +34,7 @@ public abstract class AbstractVolume : IDeserializable, ISerializable, IDrawable
             e.SetAttributeValue("ID", ID);
     }
 
-    public virtual void DrawOn(ICanvas canvas, Transform trans, RenderConfig config, RenderContext context, RenderState state)
+    public void DrawOn(ICanvas canvas, Transform trans, RenderConfig config, RenderContext context, RenderState state)
     {
         if (!ShouldShow(config))
             return;

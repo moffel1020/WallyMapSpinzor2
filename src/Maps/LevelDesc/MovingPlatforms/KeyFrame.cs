@@ -3,7 +3,7 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class KeyFrame : AbstractKeyFrame
+public sealed class KeyFrame : AbstractKeyFrame, IDeserializable<KeyFrame>
 {
     public int FrameNum { get; set; }
     public double Rotation { get; set; }
@@ -18,7 +18,8 @@ public class KeyFrame : AbstractKeyFrame
 
     public bool HasCenter => CenterX is not null || CenterY is not null;
 
-    public override void Deserialize(XElement e)
+    public KeyFrame() { }
+    private KeyFrame(XElement e)
     {
         FrameNum = e.GetIntAttribute("FrameNum", 0);
         //Unlike other rotations, this one doesn't get translated to radians until it's used.
@@ -32,6 +33,7 @@ public class KeyFrame : AbstractKeyFrame
         Y = e.GetDoubleAttribute("Y", 0);
         RespawnOff = e.GetBoolAttribute("RespawnOff", false);
     }
+    public static KeyFrame Deserialize(XElement e) => new(e);
 
     public override void Serialize(XElement e)
     {

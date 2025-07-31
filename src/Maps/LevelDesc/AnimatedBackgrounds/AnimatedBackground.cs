@@ -3,7 +3,7 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class AnimatedBackground : IDeserializable, ISerializable, IDrawable
+public sealed class AnimatedBackground : IDeserializable<AnimatedBackground>, ISerializable, IDrawable
 {
     public bool Midground { get; set; }
 
@@ -29,7 +29,8 @@ public class AnimatedBackground : IDeserializable, ISerializable, IDrawable
     public string? SoundString { get; set; }
     public uint? SoundFrame { get; set; }
 
-    public void Deserialize(XElement e)
+    public AnimatedBackground() { }
+    private AnimatedBackground(XElement e)
     {
         Gfx = e.DeserializeRequiredChildOfType<Gfx>();
 
@@ -53,6 +54,7 @@ public class AnimatedBackground : IDeserializable, ISerializable, IDrawable
         SoundString = e.GetElementOrNull("SoundString");
         SoundFrame = e.GetUIntElementOrNull("SoundFrame");
     }
+    public static AnimatedBackground Deserialize(XElement e) => new(e);
 
     public void Serialize(XElement e)
     {

@@ -3,7 +3,7 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public static class MapXmlExtensions
+internal static class MapXmlExtensions
 {
     public static AbstractCollision[] DeserializeCollisionChildren(this XElement e) =>
         [.. e.Elements().Select(DeserializeCollision).Where(c => c is not null)!];

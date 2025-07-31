@@ -55,18 +55,18 @@ public static class XmlExtensions
         if (value is not null) element.Add(new XElement(name, value));
     }
 
-    public static T DeserializeTo<T>(this XElement e) where T : IDeserializable, new()
+    public static T DeserializeTo<T>(this XElement e) where T : IDeserializable<T>
     {
-        T t = new(); t.Deserialize(e); return t;
+        return T.Deserialize(e);
     }
 
-    public static T[] DeserializeChildrenOfType<T>(this XElement e, string? name = null) where T : IDeserializable, new()
+    public static T[] DeserializeChildrenOfType<T>(this XElement e, string? name = null) where T : IDeserializable<T>
         => [.. e.Elements(name ?? typeof(T).Name).Select(DeserializeTo<T>)];
 
-    public static T? DeserializeChildOfType<T>(this XElement e, string? name = null) where T : class, IDeserializable, new()
+    public static T? DeserializeChildOfType<T>(this XElement e, string? name = null) where T : class, IDeserializable<T>
         => e.Element(name ?? typeof(T).Name)?.DeserializeTo<T>();
 
-    public static T DeserializeRequiredChildOfType<T>(this XElement e, string? name = null) where T : IDeserializable, new()
+    public static T DeserializeRequiredChildOfType<T>(this XElement e, string? name = null) where T : IDeserializable<T>
         => (e.Element(name ?? typeof(T).Name) ?? throw new SerializationException($"Element {e} is missing required child {name ?? typeof(T).Name}")).DeserializeTo<T>();
 
     public static XElement SerializeToXElement<T>(this T t, string? name = null) where T : ISerializable

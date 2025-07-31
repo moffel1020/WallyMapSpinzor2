@@ -1,10 +1,11 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class RenderConfig : IDeserializable, ISerializable
+public sealed class RenderConfig : IDeserializable<RenderConfig>, ISerializable
 {
     private const string INDEX = "Index";
 
@@ -190,7 +191,110 @@ public class RenderConfig : IDeserializable, ISerializable
 
     public required Color ColorHordePath { get; set; }
 
-    public void Deserialize(XElement e)
+    public RenderConfig() { }
+
+    [SetsRequiredMembers]
+    public RenderConfig(RenderConfig other)
+    {
+        Time = other.Time;
+        RenderSpeed = other.RenderSpeed;
+        ScoringType = other.ScoringType;
+        Theme = other.Theme;
+        Hotkey = other.Hotkey;
+        AnimatedBackgrounds = other.AnimatedBackgrounds;
+        NoSkulls = other.NoSkulls;
+        ShowPickedPlatform = other.ShowPickedPlatform;
+        PickedPlatform = other.PickedPlatform;
+        BlueScore = other.BlueScore;
+        RedScore = other.RedScore;
+        ShowRingRopes = other.ShowRingRopes;
+        ShowZombieSpawns = other.ShowZombieSpawns;
+        ShowBombsketballTargets = other.ShowBombsketballTargets;
+        UseBombsketballDigitSize = other.UseBombsketballDigitSize;
+        ShowBombsketballBombTimers = [.. other.ShowBombsketballBombTimers];
+        BombsketballBombTimerFrames = [.. other.BombsketballBombTimerFrames];
+        ShowHordeDoors = other.ShowHordeDoors;
+        DamageHordeDoors = [.. other.DamageHordeDoors];
+        HordePathType = other.HordePathType;
+        HordePathIndex = other.HordePathIndex;
+        HordeWave = other.HordeWave;
+        HordeRandomSeed = other.HordeRandomSeed;
+        ShowCameraBounds = other.ShowCameraBounds;
+        ShowKillBounds = other.ShowKillBounds;
+        ShowSpawnBotBounds = other.ShowSpawnBotBounds;
+        ShowAssets = other.ShowAssets;
+        ShowBackground = other.ShowBackground;
+        ShowCollision = other.ShowCollision;
+        ShowCollisionNormalOverride = other.ShowCollisionNormalOverride;
+        ShowFireOffsetLocation = other.ShowFireOffsetLocation;
+        ShowFireOffsetLine = other.ShowFireOffsetLine;
+        ShowFireDirection = other.ShowFireDirection;
+        ShowGoal = other.ShowGoal;
+        ShowNoDodgeZone = other.ShowNoDodgeZone;
+        ShowVolume = other.ShowVolume;
+        ShowRespawn = other.ShowRespawn;
+        ShowItemSpawn = other.ShowItemSpawn;
+        ShowNavNode = other.ShowNavNode;
+        ShowBotPanicLine = other.ShowBotPanicLine;
+        ShowBotGroundLine = other.ShowBotGroundLine;
+        RadiusRespawn = other.RadiusRespawn;
+        RadiusZombieSpawn = other.RadiusZombieSpawn;
+        RadiusNavNode = other.RadiusNavNode;
+        RadiusHordePathPoint = other.RadiusHordePathPoint;
+        RadiusFireOffsetLocation = other.RadiusFireOffsetLocation;
+        LengthCollisionNormal = other.LengthCollisionNormal;
+        LengthFireDirectionArrow = other.LengthFireDirectionArrow;
+        OffsetNavLineArrowSide = other.OffsetNavLineArrowSide;
+        OffsetNavLineArrowBack = other.OffsetNavLineArrowBack;
+        OffsetHordePathArrowSide = other.OffsetHordePathArrowSide;
+        OffsetHordePathArrowBack = other.OffsetHordePathArrowBack;
+        OffsetFireDirectionArrowSide = other.OffsetFireDirectionArrowSide;
+        OffsetFireDirectionArrowBack = other.OffsetFireDirectionArrowBack;
+        ColorCameraBounds = other.ColorCameraBounds;
+        ColorKillBounds = other.ColorKillBounds;
+        ColorSpawnBotBounds = other.ColorSpawnBotBounds;
+        ColorHardCollision = other.ColorHardCollision;
+        ColorSoftCollision = other.ColorSoftCollision;
+        ColorNoSlideCollision = other.ColorNoSlideCollision;
+        ColorGameModeHardCollision = other.ColorGameModeHardCollision;
+        ColorBouncyHardCollision = other.ColorBouncyHardCollision;
+        ColorBouncySoftCollision = other.ColorBouncySoftCollision;
+        ColorBouncyNoSlideCollision = other.ColorBouncyNoSlideCollision;
+        ColorTriggerCollision = other.ColorTriggerCollision;
+        ColorStickyCollision = other.ColorStickyCollision;
+        ColorItemIgnoreCollision = other.ColorItemIgnoreCollision;
+        ColorPressurePlateCollision = other.ColorPressurePlateCollision;
+        ColorSoftPressurePlateCollision = other.ColorSoftPressurePlateCollision;
+        ColorLavaCollision = other.ColorLavaCollision;
+        ColorCollisionNormal = other.ColorCollisionNormal;
+        ColorFireOffset = other.ColorFireOffset;
+        ColorFireOffsetLine = other.ColorFireOffsetLine;
+        ColorFireDirection = other.ColorFireDirection;
+        ColorRespawn = other.ColorRespawn;
+        ColorInitialRespawn = other.ColorInitialRespawn;
+        ColorExpandedInitRespawn = other.ColorExpandedInitRespawn;
+        ColorItemSpawn = other.ColorItemSpawn;
+        ColorItemInitSpawn = other.ColorItemInitSpawn;
+        ColorItemSet = other.ColorItemSet;
+        ColorTeamItemInitSpawn = other.ColorTeamItemInitSpawn;
+        ColorCollisionTeam = [.. other.ColorCollisionTeam];
+        ColorVolumeTeam = [.. other.ColorVolumeTeam];
+        ColorZombieSpawns = other.ColorZombieSpawns;
+        ColorNavNode = other.ColorNavNode;
+        ColorNavNodeW = other.ColorNavNodeW;
+        ColorNavNodeL = other.ColorNavNodeL;
+        ColorNavNodeA = other.ColorNavNodeA;
+        ColorNavNodeG = other.ColorNavNodeG;
+        ColorNavNodeT = other.ColorNavNodeT;
+        ColorNavNodeS = other.ColorNavNodeS;
+        ColorNavPath = other.ColorNavPath;
+        ColorBotPanicLine = other.ColorBotPanicLine;
+        ColorBotGroundLine = other.ColorBotGroundLine;
+        ColorHordePath = other.ColorHordePath;
+    }
+
+    [SetsRequiredMembers]
+    public RenderConfig(XElement e)
     {
         bool getBool(string name, bool @default) => e.GetBoolElement(name, @default);
         int getInt(string name, int @default) => e.GetIntElement(name, @default);
@@ -302,6 +406,7 @@ public class RenderConfig : IDeserializable, ISerializable
         ColorBotGroundLine = getColor(nameof(ColorBotGroundLine), @default.ColorBotGroundLine);
         ColorHordePath = getColor(nameof(ColorHordePath), @default.ColorHordePath);
     }
+    public static RenderConfig Deserialize(XElement e) => new(e);
 
     public void Serialize(XElement e)
     {

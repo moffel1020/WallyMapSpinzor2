@@ -2,7 +2,7 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class WaveData : IDeserializable, ISerializable, IDrawable
+public sealed class WaveData : IDeserializable<WaveData>, ISerializable, IDrawable
 {
     public uint ID { get; set; }
     public double? Speed { get; set; }
@@ -12,7 +12,8 @@ public class WaveData : IDeserializable, ISerializable, IDrawable
     public CustomPath[] CustomPaths { get; set; } = null!;
     public Group[] Groups { get; set; } = null!;
 
-    public void Deserialize(XElement e)
+    public WaveData() { }
+    private WaveData(XElement e)
     {
         ID = e.GetUIntAttribute("ID", 0);
         Speed = e.GetDoubleAttributeOrNull("Speed");
@@ -25,6 +26,7 @@ public class WaveData : IDeserializable, ISerializable, IDrawable
         foreach (CustomPath cp in CustomPaths) cp.Parent = this;
         foreach (Group g in Groups) g.Parent = this;
     }
+    public static WaveData Deserialize(XElement e) => new(e);
 
     public void Serialize(XElement e)
     {

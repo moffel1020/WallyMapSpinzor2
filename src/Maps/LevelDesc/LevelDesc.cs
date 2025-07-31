@@ -5,7 +5,7 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class LevelDesc : IDeserializable, ISerializable, IDrawable
+public sealed class LevelDesc : IDeserializable<LevelDesc>, ISerializable, IDrawable
 {
     public const double ANIMATION_FPS = 24;
     public static long GET_ANIM_FRAME(TimeSpan time) => (long)(ANIMATION_FPS * time.TotalSeconds);
@@ -37,7 +37,8 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
     public WaveData[] WaveDatas { get; set; } = null!;
     public AnimatedBackground[] AnimatedBackgrounds { get; set; } = null!;
 
-    public virtual void Deserialize(XElement e)
+    public LevelDesc() { }
+    private LevelDesc(XElement e)
     {
         AssetDir = e.GetAttribute("AssetDir");
         LevelName = e.GetAttribute("LevelName");
@@ -64,6 +65,7 @@ public class LevelDesc : IDeserializable, ISerializable, IDrawable
         NavNodes = e.DeserializeChildrenOfType<NavNode>();
         DynamicNavNodes = e.DeserializeChildrenOfType<DynamicNavNode>();
     }
+    public static LevelDesc Deserialize(XElement e) => new(e);
 
     public void Serialize(XElement e)
     {

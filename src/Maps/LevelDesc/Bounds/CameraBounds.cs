@@ -2,19 +2,22 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class CameraBounds : IDeserializable, ISerializable, IDrawable
+public sealed class CameraBounds : IDeserializable<CameraBounds>, ISerializable, IDrawable
 {
     public double H { get; set; }
     public double W { get; set; }
     public double X { get; set; }
     public double Y { get; set; }
-    public void Deserialize(XElement e)
+
+    public CameraBounds() { }
+    private CameraBounds(XElement e)
     {
         H = e.GetDoubleAttribute("H", 0);
         W = e.GetDoubleAttribute("W", 0);
         X = e.GetDoubleAttribute("X", 0);
         Y = e.GetDoubleAttribute("Y", 0);
     }
+    public static CameraBounds Deserialize(XElement e) => new(e);
 
     public void Serialize(XElement e)
     {

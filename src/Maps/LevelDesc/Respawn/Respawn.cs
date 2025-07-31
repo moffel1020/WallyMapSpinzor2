@@ -2,7 +2,7 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class Respawn : IDeserializable, ISerializable, IDrawable
+public sealed class Respawn : IDeserializable<Respawn>, ISerializable, IDrawable
 {
     public bool Initial { get; set; }
     public bool ExpandedInit { get; set; }
@@ -11,13 +11,15 @@ public class Respawn : IDeserializable, ISerializable, IDrawable
 
     public DynamicRespawn? Parent { get; set; }
 
-    public void Deserialize(XElement e)
+    public Respawn() { }
+    private Respawn(XElement e)
     {
         Initial = e.GetBoolAttribute("Initial", false);
         ExpandedInit = e.GetBoolAttribute("ExpandedInit", false);
         X = e.GetDoubleAttribute("X", 0);
         Y = e.GetDoubleAttribute("Y", 0);
     }
+    public static Respawn Deserialize(XElement e) => new(e);
 
     public void Serialize(XElement e)
     {

@@ -2,7 +2,7 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class LessonMarker : IDeserializable, ISerializable
+public sealed class LessonMarker : IDeserializable<LessonMarker>, ISerializable
 {
     private static (double, double) DefaultDimensions(string type) => type switch
     {
@@ -19,7 +19,8 @@ public class LessonMarker : IDeserializable, ISerializable
     public double Dimensions_W { get; set; }
     public double Dimensions_H { get; set; }
 
-    public void Deserialize(XElement e)
+    public LessonMarker() { }
+    private LessonMarker(XElement e)
     {
         OrderID = e.GetUIntAttribute("OrderID");
         Type = e.GetAttribute("Type");
@@ -50,6 +51,7 @@ public class LessonMarker : IDeserializable, ISerializable
             (Dimensions_W, Dimensions_H) = DefaultDimensions(Type);
         }
     }
+    public static LessonMarker Deserialize(XElement e) => new(e);
 
     public void Serialize(XElement e)
     {

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace WallyMapSpinzor2;
 
-public class RenderState
+public sealed class RenderState
 {
     internal BrawlhallaRandom Random { get; set; } = new();
 

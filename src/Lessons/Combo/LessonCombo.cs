@@ -3,7 +3,7 @@ using System.Xml.Linq;
 
 namespace WallyMapSpinzor2;
 
-public class LessonCombo : IDeserializable, ISerializable
+public sealed class LessonCombo : IDeserializable<LessonCombo>, ISerializable
 {
     public ComboPart[] ComboParts { get; set; } = [];
     public uint Forgiveness { get; set; }
@@ -13,14 +13,10 @@ public class LessonCombo : IDeserializable, ISerializable
     public ComboInputFlags[] DemoRecording { get; set; } = [];
     public ComboInputFlags[] BotRecording { get; set; } = [];
 
-    public void Deserialize(XElement e)
+    public LessonCombo() { }
+    private LessonCombo(XElement e)
     {
-        ComboParts = e.Elements().Select((child) =>
-        {
-            ComboPart? part = ComboPart.New(child.Name.LocalName);
-            part?.Deserialize(child);
-            return part;
-        }).Where((part) => part is not null).ToArray()!;
+        ComboParts = e.Elements().Select(ComboPart.New).Where((part) => part is not null).ToArray()!;
 
         Forgiveness = e.GetUIntElement("forgiveness", 32);
         ShowStun = e.GetBoolElement("showStun", false);
@@ -29,6 +25,7 @@ public class LessonCombo : IDeserializable, ISerializable
         DemoRecording = e.GetElementOrNull("demoRecording")?.Split(',').Select(ushort.Parse).Cast<ComboInputFlags>().ToArray() ?? [];
         BotRecording = e.GetElementOrNull("botRecording")?.Split(',').Select(ushort.Parse).Cast<ComboInputFlags>().ToArray() ?? [];
     }
+    public static LessonCombo Deserialize(XElement e) => new(e);
 
     public void Serialize(XElement e)
     {
